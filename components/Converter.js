@@ -28,7 +28,7 @@ export default class Converter extends Component {
       };
     
       get renderResultValue() {
-        let convertedCurrency = <Text>After you choose your currency, enter the amount that you want to convert. </Text>;
+        let convertedCurrency = <Text style={styles.instructionText}>2. After you choose your currency, enter the amount that you want to convert. </Text>;
         if (this.state.convertedCurrency) {
             convertedCurrency = <ConvertedCurrency list={this.state.convertedCurrency} />;
         }
@@ -38,18 +38,20 @@ export default class Converter extends Component {
   render() {
   
     return (
-      <View style={{ flex: 1, paddingTop: 100, justifyContent: "center", alignItems: "left" }}>
-          <Text>Choose your starting currency</Text>
-          <View style={{flex: 1, flexDirection: 'row', marginTop: 40,}}>
+      <View style={{ flex: 1, paddingTop: 50, justifyContent: "center", alignItems: "left" }}>
+          <Text style={styles.instructionText}>1. Choose your starting currency</Text>
+          <View style={{flex: 1, flexDirection: 'row', marginTop: 10, marginBottom: 20 }}>
              <View>
-                <Button style={styles.currencyButton} title="$"></Button>
+                <Button style={(this.state.btnSelected== 1)?styles.btnSelected:styles.notSelected}
+                onPress={() => this.setState({ btnSelected: 1 })} title="$"></Button>
             </View>
             <View>
-                <Button style={styles.currencyButton} title="₿"></Button>
+                <Button style={(this.state.btnSelected== 2)?styles.btnSelected:styles.notSelected}
+                onPress={() => this.setState({ btnSelected: 2 })} title="₿"></Button>
             </View>
         </View>    
          
-        {this.renderResultValue}
+        <Text style={styles.instructionText}>{this.renderResultValue}</Text>
         <TextInput 
             value={this.state.value}
             onChange={e => this.onChangeHandler(e)}
@@ -69,6 +71,12 @@ const styles = StyleSheet.create({
       height: 50,
      backgroundColor: 'powderblue'
     },
+    btnSelected: {
+       borderColor: 'blue'
+     },
+     notSelected : {
+        borderColor: 'white'
+     },
     titleText: {
       fontSize: 20,
       fontWeight: 'bold',
@@ -78,8 +86,12 @@ const styles = StyleSheet.create({
       justifyContent: "center", 
       alignItems: "center"  
     },
+    instructionText:{
+        fontSize: 20,
+      
+    },
     currencyInput: {
-        marginTop: 40,
+        marginTop: 10,
         marginBottom: 20, 
         height: 40, 
         width: 200, 

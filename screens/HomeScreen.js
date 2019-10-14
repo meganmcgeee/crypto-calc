@@ -1,47 +1,20 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import {
-  Platform,
   ScrollView,
-  Button,
   StyleSheet,
   Text,
-  TextInput,
   View
 } from 'react-native';
 import Converter from '../components/Converter';
-
-// const styles = StyleSheet.create({
-//   container: {
-//     backgroundColor: '#fff',
-//     flex: 1
-//   },
-//   contentContainer: {
-//     paddingTop: 30
-//   },
-//   welcomeContainer: {
-//     alignItems: 'center',
-//     marginBottom: 20,
-//     marginTop: 10
-//   },
-//   welcomeImage: {
-//     height: 80,
-//     marginLeft: -10,
-//     marginTop: 3,
-//     resizeMode: 'contain',
-//     width: 100
-//   }
-// });
-
-
-
 
 export default function HomeScreen() {
   return (
     <View>
       <ScrollView>
-        <View style={{ padding: 50 }}>
+        <View style={styles.body}>
           <Text style={styles.titleText}>CryptoCalc</Text>
+          <Text> CryptoCalc provides up-to-the-minute currency conversions on the US Dollar to Bitcoin and back so you can see where your investments stand or know when to buy in.</Text>
           <Converter></Converter>
         </View>
       </ScrollView>
@@ -50,22 +23,21 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  body: {
+    padding: 50
+  },
   baseText: {
     fontFamily: 'Cochin',
   },
   titleText: {
-    fontSize: 20,
+    fontSize: 80,
+    color: "green",
     fontWeight: 'bold',
     flex: 1, 
-    paddingTop: 100, 
-    paddingLeft: 50, 
+    paddingTop: 5, 
+    paddingLeft: 20,
+    marginBottom: 10, 
     justifyContent: "center", 
     alignItems: "center"  
   },
 });
-
-
-HomeScreen.navigationOptions = {
-  header: null,
-};
-
