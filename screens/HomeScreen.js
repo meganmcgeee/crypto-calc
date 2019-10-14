@@ -40,15 +40,30 @@ export default function HomeScreen() {
   return (
     <View>
       <ScrollView>
-        <View>
-          <Text>Welcome to CryptoCalc</Text>
-     
+        <View style={{ padding: 50 }}>
+          <Text style={styles.titleText}>CryptoCalc</Text>
           <Converter></Converter>
         </View>
       </ScrollView>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  baseText: {
+    fontFamily: 'Cochin',
+  },
+  titleText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    flex: 1, 
+    paddingTop: 100, 
+    paddingLeft: 50, 
+    justifyContent: "center", 
+    alignItems: "center"  
+  },
+});
+
 
 HomeScreen.navigationOptions = {
   header: null,
