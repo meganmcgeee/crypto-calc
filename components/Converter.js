@@ -26,7 +26,7 @@ class Converter extends React.Component {
           this.setState({ currencies: currencyAr });
         })
         .catch(err => {
-          console.log("oppps", err);
+          console.log("Did not load", err);
         });
       };
       // convert entered base currency 
@@ -66,30 +66,30 @@ class Converter extends React.Component {
     return (
       <View style={styles.container}>
           <Text style={styles.instructionText}>1. Choose your starting currency</Text>
+          <View style={{flex: 1, flexDirection: 'row'}}>
+              <Picker name="from" selectedValue={this.state.currency} style={{ width: 100 }} onValueChange={(itemValue, itemIndex) => this.setState({currency: itemValue})}>
+                <Picker.Item label="BTC" value="BTC" /> 
+                <Picker.Item label="USD" value="USD" />
+              </Picker>
+              <Picker style={styles.select} name="to">
+                <Picker.Item label="USD" value="USD" /> 
+                <Picker.Item label="BTC" value="BTC" />
+              </Picker>
+            </View>
+            <Text style={styles.instructionText}>2. Enter your starting value</Text>
             <View style={{flex: 1, flexDirection: 'row'}}>
-              <TextInput style={styles.currencyInput} name="amount" placeholder="1000" 
+              <TextInput style={styles.currencyInput} name="to" placeholder="1000" 
                 // value={this.state.amount}
                 // onChange={event => this.setState({ amount: event.target.value })}
               />
-              <TextInput style={styles.currencyInput} name="amount" placeholder="1000" 
+              <TextInput style={styles.currencyInput} name="from" placeholder="1000" 
                 // value={this.state.amount}
                 // onChange={event => this.setState({ amount: event.target.value })}
               />
             </View>  
-            <View style={{flex: 1, flexDirection: 'row'}}>
-              <Picker name="from" selectedValue={this.state.currency} style={{ height: 50, width: 100 }} onValueChange={(itemValue, itemIndex) => this.setState({currency: itemValue})}>
-                <Picker.Item label="BTC" value="BTC" /> 
-                <Picker.Item label="USD" value="USD" />
-              </Picker>
-              <Picker style={styles.select} name="to" selectedValue={this.state.currency} style={{ height: 50, width: 100 }} onValueChange={(itemValue, itemIndex) => this.setState({currency: itemValue})}>
-                <Picker.Item label="USD" value="USD" /> 
-                <Picker.Item label="BTC" value="BTC" />
-              </Picker>
-
-            </View>
+            <Text style={styles.instructionText}>3. Hit Convert!</Text>   
         <Text style={styles.instructionText}>{this.renderResultValue}</Text>
-
-
+        <Button title="Convert"></Button>
       </View>
     );
   }
@@ -99,9 +99,9 @@ export default Converter
 const styles = StyleSheet.create({
     container: {
       flex: 1, 
-      paddingTop: 20, 
-      justifyContent: "center",
-      margin: 35
+      paddingTop: 10, 
+      justifyContent: "center"
+      // margin: 35
     },
     instructionText:{
         fontSize: 20,
