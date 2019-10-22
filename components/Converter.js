@@ -1,102 +1,121 @@
 import * as WebBrowser from 'expo-web-browser';
 import axios from 'axios'
 import React, { Component } from 'react';
-import { Text, View, Button, StyleSheet, TextInput } from 'react-native';
+import { Text, View, Button, StyleSheet, TextInput, Picker, Item } from 'react-native';
 
-const API_KEY='a5e3e69ec31c780ade2977e0e7b7d87b'
-
-export default class Converter extends Component {
-    state = {
-        convertedCurrency: null,
-        loading: false,
-        value: ''
+class Converter extends React.Component {
+  constructor(props){
+      super(props); 
+        this.state = {
+          result: null,
+          fromCurrency: "USD",
+          toCurrency: "BTC",
+          amount: 1,
+          currencies: []
+        };
       };
-    
-      search = async amount => {
-        this.setState({ loading: true });
-        const res = await axios(
-          `https://data.fixer.io/api/convert?access_key=a5e3e69ec31c780ade2977e0e7b7d87b&from=USD&to=BTC&amount=${amount}`
-        );
-        const convertedCurrency = await res.data.results;
-    
-        this.setState({ convertedCurrency, loading: false });
+      // get up-to-minute currency rates, set USD as default
+      componentDidMount() {
+        axios
+        .get("http://api.openrates.io/latest")
+        .then(response => {
+          const currencyAr = ["USD"];
+          for (const key in response.data.rates) {
+            currencyAr.push(key);
+          }
+          this.setState({ currencies: currencyAr });
+        })
+        .catch(err => {
+          console.log("oppps", err);
+        });
       };
-    
-      onChangeHandler = async e => {
-        this.search(e.target.value);
-        this.setState({ value: e.target.value });
-      };
-    
-      get renderResultValue() {
-        let convertedCurrency = <Text style={styles.instructionText}>2. After you choose your currency, enter the amount that you want to convert. </Text>;
-        if (this.state.convertedCurrency) {
-            convertedCurrency = <ConvertedCurrency list={this.state.convertedCurrency} />;
+      // convert entered base currency 
+      convertHandler = () => {
+        if (this.state.fromCurrency !== this.state.toCurrency) {
+          axios
+            .get(
+              `http://api.openrates.io/latest?base=${
+                this.state.fromCurrency
+              }&symbols=${this.state.toCurrency}`
+            )
+            .then(response => {
+              const result =
+                this.state.amount * response.data.rates[this.state.toCurrency];
+              this.setState({ result: result.toFixed(5) });
+            })
+            .catch(error => {
+              console.log("Did not return", error.message);
+            });
+        } else {
+          this.setState({ result: "You can't convert the same currency!" });
         }
-    
-        return convertedCurrency;
-      } 
+      };
+
+      // handle changes  in selection of currency type
+      pickerHandler = event => {
+        if (event.target.name === "from") {
+          this.setState({ fromCurrency: event.target.value });
+        } else {
+          if (event.target.name === "to") {
+            this.setState({ toCurrency: event.target.value });
+          }
+        }
+      
+  };  
   render() {
-  
     return (
-      <View style={{ flex: 1, paddingTop: 50, justifyContent: "center", alignItems: "left" }}>
+      <View style={styles.container}>
           <Text style={styles.instructionText}>1. Choose your starting currency</Text>
-          <View style={{flex: 1, flexDirection: 'row', marginTop: 10, marginBottom: 20 }}>
-             <View>
-                <Button style={(this.state.btnSelected== 1)?styles.btnSelected:styles.notSelected}
-                onPress={() => this.setState({ btnSelected: 1 })} title="$"></Button>
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <TextInput style={styles.currencyInput} name="amount" placeholder="1000" 
+                // value={this.state.amount}
+                // onChange={event => this.setState({ amount: event.target.value })}
+              />
+              <TextInput style={styles.currencyInput} name="amount" placeholder="1000" 
+                // value={this.state.amount}
+                // onChange={event => this.setState({ amount: event.target.value })}
+              />
+            </View>  
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <Picker name="from" selectedValue={this.state.currency} style={{ height: 50, width: 100 }} onValueChange={(itemValue, itemIndex) => this.setState({currency: itemValue})}>
+                <Picker.Item label="BTC" value="BTC" /> 
+                <Picker.Item label="USD" value="USD" />
+              </Picker>
+              <Picker style={styles.select} name="to" selectedValue={this.state.currency} style={{ height: 50, width: 100 }} onValueChange={(itemValue, itemIndex) => this.setState({currency: itemValue})}>
+                <Picker.Item label="USD" value="USD" /> 
+                <Picker.Item label="BTC" value="BTC" />
+              </Picker>
+
             </View>
-            <View>
-                <Button style={(this.state.btnSelected== 2)?styles.btnSelected:styles.notSelected}
-                onPress={() => this.setState({ btnSelected: 2 })} title="₿"></Button>
-            </View>
-        </View>    
-         
         <Text style={styles.instructionText}>{this.renderResultValue}</Text>
-        <TextInput 
-            value={this.state.value}
-            onChange={e => this.onChangeHandler(e)}
-            placeholder="$1,000"
-            style={styles.currencyInput}
-          />
+
 
       </View>
     );
   }
 }
+export default Converter
 
 const styles = StyleSheet.create({
-    currencyButton: {
-      fontFamily: 'Cochin',
-      width: 50,
-      height: 50,
-     backgroundColor: 'powderblue'
-    },
-    btnSelected: {
-       borderColor: 'blue'
-     },
-     notSelected : {
-        borderColor: 'white'
-     },
-    titleText: {
-      fontSize: 20,
-      fontWeight: 'bold',
+    container: {
       flex: 1, 
-      paddingTop: 100, 
-      paddingLeft: 50, 
-      justifyContent: "center", 
-      alignItems: "center"  
+      paddingTop: 20, 
+      justifyContent: "center",
+      margin: 35
     },
     instructionText:{
         fontSize: 20,
-      
     },
     currencyInput: {
         marginTop: 10,
         marginBottom: 20, 
         height: 40, 
-        width: 200, 
+        width: 150, 
         borderColor: 'gray', 
         borderWidth: 1
+    },
+    select: {
+      paddingRight: 20
     }
   });
   

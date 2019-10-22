@@ -24,19 +24,21 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   body: {
-    padding: 50
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 20
   },
   baseText: {
     fontFamily: 'Cochin',
   },
   titleText: {
-    fontSize: 80,
+    fontSize: 40,
     color: "green",
     fontWeight: 'bold',
     flex: 1, 
     paddingTop: 5, 
+    marginBottom: 20,
     paddingLeft: 20,
-    marginBottom: 10, 
     justifyContent: "center", 
     alignItems: "center"  
   },
